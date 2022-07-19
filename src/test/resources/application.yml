@@ -17,3 +17,5 @@ logging:
     sql: debug
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+# test는 이 속성으로 실행이 된다. -> spring boot에서는 memory db에 대한 설정이 없어도 동작한다.
