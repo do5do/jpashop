@@ -43,4 +43,12 @@ public class MemberService {
     public Member findOne(Long memberId) {
         return memberRepository.findOne(memberId);
     }
+
+    @Transactional
+    public void update(Long id, String name) { // 변경 감지
+        Member member = memberRepository.findOne(id); // 1. 영속성 컨텍스트에서 member 조회(없으면 DB에서 조회) -> Transactional이 있는 상태에서 조회하면 영속성 컨텍스트에서 가져옴.
+        member.setName(name); // 2. 영속성 엔티티 값 변경
+        // 3. 변경 감지(dirty checking) flush
+        // 4. Transaction commit
+    }
 }
