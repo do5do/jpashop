@@ -4,6 +4,7 @@ import jpabook.jpashop.domain.*;
 import jpabook.jpashop.repository.ItemRepository;
 import jpabook.jpashop.repository.MemberRepository;
 import jpabook.jpashop.repository.OrderRepository;
+import jpabook.jpashop.repository.OrderSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,8 +66,8 @@ public class OrderService {
         // 그렇기 때문에 엔티티의 값을 변경하고나서 다시 그 값을 꺼내와서 직접 sql을 짜서 update를 시켜줄 필요가 없어진다.
     }
 
-
-//    public List<Order> findOrders(OrderSearch orderSearch) {
-//        return orderRepository.findAll(orderSearch);
-//    }
+    // 검색
+    public List<Order> findOrders(OrderSearch orderSearch) {
+        return orderRepository.findAllByString(orderSearch);
+    }
 }
