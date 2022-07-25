@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,7 @@ public class Member {
     @Embedded // 내장 타입 포함
     private Address address;
 
+    @JsonIgnore // json으로 생성할때 제외 시킴
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>(); // 초기화는 필드에서 하자
 }
