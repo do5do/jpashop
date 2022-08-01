@@ -23,7 +23,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-devtools' // 개발할때 도와주는 라이브러리들을 엄청 넣어 놓음 -> ex) html 수정하고 서버를 다시 띄우지 않아도 적용 가능(build -> recompile)
+
+	// 개발할때 도와주는 라이브러리들을 엄청 넣어 놓음 -> ex) html 수정하고 서버를 다시 띄우지 않아도 적용 가능(build -> recompile)
+	implementation 'org.springframework.boot:spring-boot-devtools'
+
+	// Hibernate5Module 모듈 등록: jackson 라이브러리가 proxy 객체를 json으로 생성할 수 있도록 해줌. -> 의존성을 등록할 때 version 정보는 적을 필요가 없다. 현 스프핑 버전에 최적화 된 버전으로 등록해주기 때문
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
 
 	// query parameter log 남기는 외부 라이브러리
 	implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0"

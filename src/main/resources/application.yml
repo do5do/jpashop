@@ -8,7 +8,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
 #        show_sql: true => system.out으로 찍는 sql이기에 사용을 지양한다. logger를 통해 logging을 하도록 아래와 같이 설정한다.
