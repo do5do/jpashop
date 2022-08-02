@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order {
+public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
@@ -25,7 +25,7 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     // cascade: 상태 변화를 전파시키는 옵션. -> 연관되어 있는 엔티티의 상태도 같이 바꿔준다. 일반적으로 ALL로 사용한다.
     private List<OrderItem> orderItems = new ArrayList<>();
 
@@ -47,26 +47,26 @@ public class Order {
 
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
-        orderItem.setOrder(this);
+        orderItem.setOrders(this);
     }
 
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
-        delivery.setOrder(this);
+        delivery.setOrders(this);
     }
 
     //==생성 메서드==//
-    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) { // ...은 가변 인자로 여러의 매개 변수를 받을 수 있다.
-        Order order = new Order();
-        order.setMember(member);
-        order.setDelivery(delivery);
+    public static Orders createOrder(Member member, Delivery delivery, OrderItem... orderItems) { // ...은 가변 인자로 여러의 매개 변수를 받을 수 있다.
+        Orders orders = new Orders();
+        orders.setMember(member);
+        orders.setDelivery(delivery);
 
         for (OrderItem orderItem : orderItems) {
-            order.addOrderItem(orderItem);
+            orders.addOrderItem(orderItem);
         }
-        order.setStatus(OrderStatus.ORDER);
-        order.setOrderDate(LocalDateTime.now());
-        return order;
+        orders.setStatus(OrderStatus.ORDER);
+        orders.setOrderDate(LocalDateTime.now());
+        return orders;
     }
 
     //==비즈니스 로직==//

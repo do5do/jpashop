@@ -2,7 +2,7 @@ package jpabook.jpashop.controller;
 
 import jpabook.jpashop.domain.Item;
 import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.Orders;
 import jpabook.jpashop.repository.OrderSearch;
 import jpabook.jpashop.service.ItemService;
 import jpabook.jpashop.service.MemberService;
@@ -42,7 +42,7 @@ public class OrderController {
     @GetMapping("/orders")
     public String orderList(@ModelAttribute("orderSearch") OrderSearch orderSearch, Model model) {
         // @ModelAttribute: model 박스에 자동으로 담기는 역할 -> model.addAttribute("orderSearch", orderSearch);를 해주는 거라고 보면 된다.
-        List<Order> orders = orderService.findOrders(orderSearch);
+        List<Orders> orders = orderService.findOrders(orderSearch);
         model.addAttribute("orders", orders);
         return "order/orderList";
     }

@@ -1,7 +1,7 @@
 package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.Address;
-import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.Orders;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
@@ -36,11 +36,11 @@ public class OrderSimpleApiController {
      * * 2. Hibernate5Module을 추가하여 bean으로 생성해야 한다.
      */
     @GetMapping("/api/v1/simple-orders")
-    public List<Order> ordersV1() {
-        List<Order> all = orderRepository.findAllByString(new OrderSearch()); // orderSearch를 그냥 넘기면 검색 조건이 없기때문에 order 목록을 모두 가져온다.
-        for (Order order : all) {
-            order.getMember().getName(); // getMember()까지는 프록시 객체(db에 쿼리가 안 날라감)인데 getName을 하면 db에서 조회(member에 쿼리를 날림) -> Lazy 강제 초기화
-            order.getDelivery().getAddress(); // Lazy 강제 초기화
+    public List<Orders> ordersV1() {
+        List<Orders> all = orderRepository.findAllByString(new OrderSearch()); // orderSearch를 그냥 넘기면 검색 조건이 없기때문에 order 목록을 모두 가져온다.
+        for (Orders orders : all) {
+            orders.getMember().getName(); // getMember()까지는 프록시 객체(db에 쿼리가 안 날라감)인데 getName을 하면 db에서 조회(member에 쿼리를 날림) -> Lazy 강제 초기화
+            orders.getDelivery().getAddress(); // Lazy 강제 초기화
         }
         return all;
     }
@@ -52,7 +52,7 @@ public class OrderSimpleApiController {
     @GetMapping("/api/v2/simple-orders")
     public List<SimpleOrderDto> ordersV2() {
         // ORDER 2개 조회
-        List<Order> orders = orderRepository.findAllByString(new OrderSearch());
+        List<Orders> orders = orderRepository.findAllByString(new OrderSearch());
 
         // loop를 돌면서 lazy 초기화 객체 조회 (member, delivery)
         return orders.stream()
@@ -69,7 +69,7 @@ public class OrderSimpleApiController {
      */
     @GetMapping("/api/v3/simple-orders")
     public List<SimpleOrderDto> ordersV3() {
-        List<Order> orders = orderRepository.findAllWithMemberDelivery();
+        List<Orders> orders = orderRepository.findAllWithMemberDelivery();
         return orders.stream()
                 .map(SimpleOrderDto::new)
                 .collect(Collectors.toList());
@@ -94,12 +94,12 @@ public class OrderSimpleApiController {
         private OrderStatus orderStatus;
         private Address address;
 
-        public SimpleOrderDto(Order order) { // dto에서는 엔티티를 파라미터로 받는 것은 크게 문제가 되지 않는다. -> ok
-            orderId = order.getId();
-            name = order.getMember().getName(); // LAZY 초기화 -> 영속성 컨텍스트에서 찾음 -> 없으면 db에 쿼리 날려서 조회
-            orderDate = order.getOrderDate();
-            orderStatus = order.getStatus();
-            address = order.getDelivery().getAddress(); // LAZY 초기화
+        public SimpleOrderDto(Orders orders) { // dto에서는 엔티티를 파라미터로 받는 것은 크게 문제가 되지 않는다. -> ok
+            orderId = orders.getId();
+            name = orders.getMember().getName(); // LAZY 초기화 -> 영속성 컨텍스트에서 찾음 -> 없으면 db에 쿼리 날려서 조회
+            orderDate = orders.getOrderDate();
+            orderStatus = orders.getStatus();
+            address = orders.getDelivery().getAddress(); // LAZY 초기화
         }
     }
 }

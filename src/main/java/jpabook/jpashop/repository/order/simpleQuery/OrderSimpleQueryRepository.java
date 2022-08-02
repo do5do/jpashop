@@ -21,7 +21,7 @@ public class OrderSimpleQueryRepository {
         // address는 값타입이라 값처럼 동작하기때문에 아래와 같이 넣어줄 수 있다.
         return em.createQuery(
                         "select new jpabook.jpashop.repository.order.simpleQuery.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address)" +
-                                " from Order o" +
+                                " from Orders o" +
                                 " join o.member m" +
                                 " join o.delivery d", OrderSimpleQueryDto.class)
                 .getResultList();

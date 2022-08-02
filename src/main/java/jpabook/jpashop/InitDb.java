@@ -49,8 +49,8 @@ public class InitDb {
             OrderItem orderItem2 = OrderItem.createOrderItem(book2, 20000, 2);
 
             Delivery delivery = createDelivery(member);
-            Order order = Order.createOrder(member, delivery, orderItem1, orderItem2);// orderItem은 ... 파라미터이기때문에 여러개를 넘길 수 있다.
-            em.persist(order);
+            Orders orders = Orders.createOrder(member, delivery, orderItem1, orderItem2);// orderItem은 ... 파라미터이기때문에 여러개를 넘길 수 있다.
+            em.persist(orders);
         }
 
         public void dbInit2() {
@@ -67,8 +67,8 @@ public class InitDb {
             OrderItem orderItem2 = OrderItem.createOrderItem(book2, 40000, 4);
 
             Delivery delivery = createDelivery(member);
-            Order order = Order.createOrder(member, delivery, orderItem1, orderItem2);// orderItem은 ... 파라미터이기때문에 여러개를 넘길 수 있다.
-            em.persist(order);
+            Orders orders = Orders.createOrder(member, delivery, orderItem1, orderItem2);// orderItem은 ... 파라미터이기때문에 여러개를 넘길 수 있다.
+            em.persist(orders);
         }
 
         private Delivery createDelivery(Member member) {

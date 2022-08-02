@@ -1,6 +1,6 @@
 package jpabook.jpashop.repository;
 
-import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.Orders;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -16,17 +16,17 @@ import java.util.List;
 public class OrderRepository {
     private final EntityManager em;
 
-    public void save(Order order) {
-        em.persist(order);
+    public void save(Orders orders) {
+        em.persist(orders);
     }
 
-    public Order findOne(Long id) {
-        return em.find(Order.class, id);
+    public Orders findOne(Long id) {
+        return em.find(Orders.class, id);
     }
 
     // jpql을 동적으로 생성
-    public List<Order> findAllByString(OrderSearch orderSearch) {
-        String jpql = "select o from Order o join o.member m";
+    public List<Orders> findAllByString(OrderSearch orderSearch) {
+        String jpql = "select o from Orders o join o.member m";
         boolean isFirstCondition = true;
 
         //주문 상태 검색
@@ -51,7 +51,7 @@ public class OrderRepository {
             jpql += " m.name like :name";
         }
 
-        TypedQuery<Order> query = em.createQuery(jpql, Order.class)
+        TypedQuery<Orders> query = em.createQuery(jpql, Orders.class)
                 .setMaxResults(1000);
 
         if (orderSearch.getOrderStatus() != null) {
@@ -65,10 +65,10 @@ public class OrderRepository {
     }
 
     // jpa criteria로 해결 -> 복잡하고 유지보수성이 거의 없어서 실무에서는 사용하지 않음. queryDsl로 대체
-    public List<Order> findAllByCriteria(OrderSearch orderSearch) { // criteria: jpql을 자바 코드로 작성할 수 있게 해주는 표준
+    public List<Orders> findAllByCriteria(OrderSearch orderSearch) { // criteria: jpql을 자바 코드로 작성할 수 있게 해주는 표준
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Order> cq = cb.createQuery(Order.class);
-        Root<Order> o = cq.from(Order.class);
+        CriteriaQuery<Orders> cq = cb.createQuery(Orders.class);
+        Root<Orders> o = cq.from(Orders.class);
         Join<Object, Object> m = o.join("member", JoinType.INNER);
 
         List<Predicate> criteria = new ArrayList<>();
@@ -88,15 +88,15 @@ public class OrderRepository {
         }
 
         cq.where(cb.and(criteria.toArray(new Predicate[criteria.size()])));
-        TypedQuery<Order> query = em.createQuery(cq).setMaxResults(1000); //최대 1000건
+        TypedQuery<Orders> query = em.createQuery(cq).setMaxResults(1000); //최대 1000건
         return query.getResultList();
     }
 
     // 검색 시 동적 쿼리를 사용하지 않을 때의 jpql
-    public List<Order> findAll(OrderSearch orderSearch) {
-        return em.createQuery("select o from Order o join o.member m" +
+    public List<Orders> findAll(OrderSearch orderSearch) {
+        return em.createQuery("select o from Orders o join o.member m" +
                         " where o.status = :status" +
-                        " and m.name like :name", Order.class) // order와 order와 연관 된 member를 조인
+                        " and m.name like :name", Orders.class) // order와 order와 연관 된 member를 조인
                 .setParameter("status", orderSearch.getOrderStatus())
                 .setParameter("name", orderSearch.getMemberName())
 //                .setFirstResult(100) paging시 start position으로 100부터 시작해서 1000개를 가져온다는 의미.
@@ -105,10 +105,26 @@ public class OrderRepository {
     }
 
     // fetch join 사용
-    public List<Order> findAllWithMemberDelivery() {
-        return em.createQuery("select o from Order o" +
-                " join fetch o.member m" +
-                " join fetch o.delivery d", Order.class)
+    public List<Orders> findAllWithMemberDelivery() {
+        return em.createQuery(
+                "select o from Orders o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Orders.class)
                 .getResultList();
+    }
+
+    public List<Orders> findAllWithItem() {
+        return em.createQuery(
+                "select distinct o from Orders o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderItems oi" +
+                        " join fetch oi.item i", Orders.class)
+                .setFirstResult(1)
+                .setMaxResults(100)
+                .getResultList();
+        // distinct는 db에 실제로 distinct를 날려준다.
+        // -> db에서는 모든 컬럼들이 다 같아야 중복이 제거된다. 실제로는 지금 상황에서 distinct를 써도 중복이 제거되지 않지만,
+        // jpa에서 distinct를 사용하여 조회하면 id로 중복을 제거하여 반환해주기 때문에 원하는 결과(중복 제거 된)를 얻을 수 있다.
     }
 }
