@@ -40,7 +40,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item : ${orders}">
+            <tr th:each="item : ${order}">
                 <td th:text="${item.id}"></td>
                 <td th:text="${item.member.name}"></td>
                 <td th:text="${item.orderItems[0].item.name}"></td>
@@ -67,7 +67,7 @@
     function cancel(id) {
         var form = document.createElement("form");
         form.setAttribute("method", "post");
-        form.setAttribute("action", "/orders/" + id + "/cancel");
+        form.setAttribute("action", "/order/" + id + "/cancel");
         document.body.appendChild(form);
         form.submit();
     }

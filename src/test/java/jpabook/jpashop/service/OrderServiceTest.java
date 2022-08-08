@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class OrdersServiceTest {
+public class OrderServiceTest {
     @PersistenceContext
     EntityManager em;
 
@@ -43,10 +43,10 @@ public class OrdersServiceTest {
         Long orderId = orderService.order(member.getId(), book.getId(), orderCount);
 
         // then
-        Orders getOrders = orderRepository.findOne(orderId);
-        assertEquals(OrderStatus.ORDER, getOrders.getStatus()); // 상품 주문시 상태는 ORDER
-        assertEquals(1, getOrders.getOrderItems().size()); // 주문한 상품 종류 수가 정확해야한다.
-        assertEquals(10000 * orderCount, getOrders.getTotalPrice()); // 주문 가격은 가격 * 수량이다.
+        Order getOrder = orderRepository.findOne(orderId);
+        assertEquals(OrderStatus.ORDER, getOrder.getStatus()); // 상품 주문시 상태는 ORDER
+        assertEquals(1, getOrder.getOrderItems().size()); // 주문한 상품 종류 수가 정확해야한다.
+        assertEquals(10000 * orderCount, getOrder.getTotalPrice()); // 주문 가격은 가격 * 수량이다.
         assertEquals(8, book.getStockQuantity()); // 주문 수량만큼 재고가 줄어야한다.
     }
 
@@ -64,8 +64,8 @@ public class OrdersServiceTest {
         orderService.cancelOrder(orderId);
 
         // then
-        Orders getOrders = orderRepository.findOne(orderId);
-        assertEquals(OrderStatus.CANCEL, getOrders.getStatus()); // 주문 취소시 상태는 CANCEL
+        Order getOrder = orderRepository.findOne(orderId);
+        assertEquals(OrderStatus.CANCEL, getOrder.getStatus()); // 주문 취소시 상태는 CANCEL
         assertEquals(10, item.getStockQuantity()); // 주문이 취소된 상품은 그만큼 재고가 증가해야 한다.
     }
     

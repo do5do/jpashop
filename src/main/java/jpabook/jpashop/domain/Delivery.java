@@ -17,7 +17,7 @@ public class Delivery {
 
     @JsonIgnore
     @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
-    private Orders orders;
+    private Order order;
 
     @Embedded
     private Address address;

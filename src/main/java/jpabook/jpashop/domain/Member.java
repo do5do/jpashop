@@ -25,6 +25,6 @@ public class Member {
 
     @JsonIgnore // json으로 생성할때 제외 시킴
     @OneToMany(mappedBy = "member")
-    private List<Orders> orders = new ArrayList<>(); // 컬랙션은 필드에서 바로 초기화하는 것이 좋다.
+    private List<Order> orders = new ArrayList<>(); // 컬랙션은 필드에서 바로 초기화하는 것이 좋다.
     // -> null 문제에서 안전, 하이버네이트 내부 메커니즘에 문제 발생 예방
 }

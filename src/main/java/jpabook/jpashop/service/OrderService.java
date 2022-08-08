@@ -40,15 +40,15 @@ public class OrderService {
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
 
         // 주문 생성
-        Orders orders = Orders.createOrder(member, delivery, orderItem);
+        Order order = Order.createOrder(member, delivery, orderItem);
 
         // 주문 저장
-        orderRepository.save(orders); // 원래라면 delivery도 생성 뒤에 저장하고 orderItem도 생성하고 save를 해줘야하는데,
+        orderRepository.save(order); // 원래라면 delivery도 생성 뒤에 저장하고 orderItem도 생성하고 save를 해줘야하는데,
         // Order에 cascade속성이 있어서 Order만 저장해도 모두 저장된다.
 
         // cascade의 범위: 현재 사용한 범위에서만 사용해야한다. -> 참조하는 주인이 private owner인 경우에만 쓴다.
         // => 이는 deliveery, orderItem은 order외에는 사용하지 않는다. order만 두 객체를 참조한다는 의미.
-        return orders.getId();
+        return order.getId();
     }
 
     /**
@@ -58,15 +58,15 @@ public class OrderService {
     @Transactional
     public void cancelOrder(Long orderId) {
         // 엔티티 조회
-        Orders orders = orderRepository.findOne(orderId);
+        Order order = orderRepository.findOne(orderId);
         // 주문 취소
-        orders.cancel();
+        order.cancel();
         // 로직이 간단한 이유 -> jpa의 가장 큰 장점인데, entity의 값이 변경되면 jpa가 더티 체킹으로 변경 내역을 감지하여 db에 update query를 알아서 날려준다.
         // 그렇기 때문에 엔티티의 값을 변경하고나서 다시 그 값을 꺼내와서 직접 sql을 짜서 update를 시켜줄 필요가 없어진다.
     }
 
     // 검색
-    public List<Orders> findOrders(OrderSearch orderSearch) {
+    public List<Order> findOrders(OrderSearch orderSearch) {
         return orderRepository.findAllByString(orderSearch);
     }
 }
