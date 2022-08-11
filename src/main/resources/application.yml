@@ -14,6 +14,7 @@ spring:
 #        show_sql: true => system.out으로 찍는 sql이기에 사용을 지양한다. logger를 통해 logging을 하도록 아래와 같이 설정한다.
         format_sql: true
         default_batch_fetch_size: 100 # in에 들어가는 개수 : 100 ~ 1000사이를 권장한다.
+#    open-in-view: false # OSIV 끄기
 
 logging:
   level:

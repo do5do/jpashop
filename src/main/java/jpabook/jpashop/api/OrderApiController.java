@@ -33,9 +33,10 @@ public class OrderApiController {
     @GetMapping("/api/v1/orders")
     public List<Order> orderV1() {
         List<Order> all = orderRepository.findAllByString(new OrderSearch());
+
         // LAZY 초기화 (OrderSimpleApiController 참고)
         for (Order order : all) {
-            order.getMember().getName();
+            order.getMember().getName(); // OSIV off시 could not initialize proxy 에러 발생 -> 지연 로딩을 초기화 할 수 없다.
             order.getDelivery().getAddress();
 
             List<OrderItem> orderItems = order.getOrderItems();
@@ -62,7 +63,7 @@ public class OrderApiController {
     }
 
     /**
-     * fetch join distinct(xToOne인 경우에 사용) 성능 최적화
+     * fetch join distinct (xToOne인 경우에 사용) 성능 최적화
      * 단점
      * * 1. xToOne을 페치 조인하는 순간 페이징이 안된다.
      * * 2. 컬렉션을 하나 이상 페치 조인 할 수 없다.
