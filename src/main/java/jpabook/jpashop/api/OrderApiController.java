@@ -83,7 +83,8 @@ public class OrderApiController {
      * @param limit
      * @return List<OrderDto>
      * - ToOne 관계만 우선 모두 페치 조인으로 최적화
-     * - 컬렉션 관계는 hibernate.default_batch_fetch_size, @BatchSize로 최적화
+     * - 컬랙션은 지연 로딩
+     * - 지연 로딩을 hibernate.default_batch_fetch_size, @BatchSize로 최적화
      */
     @GetMapping("/api/v3.1/orders")
     public List<OrderDto> orderV3_page(@RequestParam(value = "offset", defaultValue = "0") int offset,
